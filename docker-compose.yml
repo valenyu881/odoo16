@@ -1,0 +1,44 @@
+services: 
+  db: 
+    image:  postgres:14
+    container_name: db14
+    environment:  
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: admin
+    POSTGRES_DB: postgres
+  restart: always
+  volumes:
+    -db14-data:/var/lib/postgresql/data
+  networks:
+    - oddo-net 
+
+odoo16:
+   image: odoo:16
+   container_name: odoo16
+   depends_on:
+     -db
+   environment:
+    HOST: db
+    USER: admin
+    PASSWORD: admin
+   ports:
+    - "8069:8069"
+   volumes:
+   - odoo16-data:/var/lib/odoo
+   - ./config_odoo:/etc/odoo
+   - ./custom-addons:/mnt/extra-addons
+   - ./logs:/var/log/odoo
+   networks:
+    -odoo-net
+
+volumes:
+  db14-data:
+  odoo16-net:
+
+  networks:
+    odoo-net:
+
+
+
+  
+   
